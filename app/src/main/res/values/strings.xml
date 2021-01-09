@@ -1,4 +1,10 @@
 <resources>
     <string name="app_name">ToDoListAADC</string>
     <string name="snackbar_btn_title">Show SnackBar</string>
+    <string name="no_due_date">No due date</string>
+    <string name="high_priority">High priority</string>
+    <string name="red_star_title">Red for high</string>
+    <string name="yellow_star_title">Yellow for medium</string>
+    <string name="orange_star_title">Orange for low</string>
+    <string name="grey_star_title">Grey for completed</string>
 </resources>

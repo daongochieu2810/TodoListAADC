@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Sắp xếp công việc</string>
+    <string name="snackbar_btn_title">Nút nổi</string>
+    <string name="no_due_date">Không thời hạn</string>
+    <string name="high_priority">Giá trị cao</string>
+    <string name="red_star_title">Đỏ cao</string>
+    <string name="yellow_star_title">Vàng trung bình</string>
+    <string name="orange_star_title">Cam thấp</string>
+    <string name="grey_star_title">Xám hoàn thành</string>
+</resources>
