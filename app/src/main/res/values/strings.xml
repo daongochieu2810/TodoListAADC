@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">ToDoListAADC</string>
+    <string name="snackbar_btn_title">Show SnackBar</string>
+</resources>
