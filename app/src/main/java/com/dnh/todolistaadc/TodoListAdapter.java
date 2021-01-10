@@ -5,6 +5,7 @@ import android.content.res.ColorStateList;
 import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -86,6 +87,27 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoLi
         holder.dueDate.setText(dueDateStr);
         holder.priority.setText(resources.getStringArray(R.array.priorities)[priority]);
         int isCompleted = cursor.getInt(completedIndex);
+        holder.cb.setChecked(isCompleted == TodoTask.COMPLETED);
+
+        if (isCompleted == TodoTask.COMPLETED) {
+            holder.container.setBackground(resources.getDrawable(R.drawable.list_item_completed));
+            holder.cb.setTextColor(resources.getColor(R.color.colorCompleted));
+            holder.priority.setText(resources.getString(R.string.completed));
+            priority = PriorityStarImageView.COMPLETED;
+        } else {
+            holder.container.setBackground(resources.getDrawable(R.drawable.list_item_touch_selector));
+            holder.cb.setTextColor(resources.getColor(R.color.colorPrimaryDark));
+            holder.priority.setText(resources.getStringArray(R.array.priorities)[priority]);
+            if (dueDate < TodoDateUtils.getTodayDateInMillis()) {
+                // display overdue tasks with the date in red
+                // yeah, I know red for both overdue and high priority may be not the best idea
+                holder.dueDate.setTextColor(resources.getColor(R.color.colorPrimaryDark));
+            } else {
+                holder.dueDate.setTextColor(holder.priority.getCurrentTextColor());
+                Log.d(TAG, "color is " + (holder.priority.getCurrentTextColor()));
+            }
+        }
+        holder.star.setPriority(priority);
     }
 
     @Override

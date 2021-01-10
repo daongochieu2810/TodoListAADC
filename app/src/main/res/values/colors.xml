@@ -11,5 +11,8 @@
     <color name="yellow">#f8ff26</color>
 
     <color name="colorPrimaryDark">#388E3C</color>
+    <color name="colorCompleted">#9E9E9E</color>
     <color name="colorPrimaryLight">#C8E6C9</color>
+    <color name="colorCompletedBackground">#EEEEEE</color>
+    <color name="colorUncompletedBackground">#FFFFFF</color>
 </resources>
