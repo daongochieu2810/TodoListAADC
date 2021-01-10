@@ -8,9 +8,16 @@ import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.dnh.todolistaadc.custom_views.PriorityStarImageView;
+import com.dnh.todolistaadc.data.TodoListContract;
+import com.dnh.todolistaadc.utils.TodoDateUtils;
 
 public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoListAdapterViewHolder> {
     private final static String TAG = TodoListAdapter.class.getSimpleName();
@@ -63,7 +70,22 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoLi
 
     @Override
     public void onBindViewHolder(@NonNull TodoListAdapterViewHolder holder, int position) {
+        cursor.moveToPosition(position);
+        holder.cb.setText(cursor.getString(descIndex));
+        holder.dueDate.setTextColor(holder.priority.getCurrentTextColor());
 
+        String dueDateStr;
+        long dueDate = cursor.getLong(dueDateIndex);
+        if (dueDate == TodoTask.NO_DUE_DATE) {
+            dueDateStr = "No due date";
+        } else {
+            dueDateStr = TodoDateUtils.formatDueDate(context, dueDate);
+        }
+
+        int priority = cursor.getInt(priorityIndex);
+        holder.dueDate.setText(dueDateStr);
+        holder.priority.setText(resources.getStringArray(R.array.priorities)[priority]);
+        int isCompleted = cursor.getInt(completedIndex);
     }
 
     @Override
@@ -77,8 +99,13 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoLi
     public void swapCursor(Cursor cursor) {
         this.cursor = cursor;
         if (cursor != null) {
-            //descIndex = cursor.getColumnIndex()
+            descIndex = cursor.getColumnIndex(TodoListContract.TodoListEntry.COLUMN_DESCRIPTION);
+            priorityIndex = cursor.getColumnIndex(TodoListContract.TodoListEntry.COLUMN_PRIORITY);
+            dueDateIndex = cursor.getColumnIndex(TodoListContract.TodoListEntry.COLUMN_DUE_DATE);
+            idIndex = cursor.getColumnIndex(TodoListContract.TodoListEntry.COLUMN_ID);
+            completedIndex =cursor.getColumnIndex(TodoListContract.TodoListEntry.COLUMN_COMPLETED);
         }
+        notifyDataSetChanged();
     }
 
     public interface TodoListAdapterOnClickHandler {
@@ -86,13 +113,29 @@ public class TodoListAdapter extends RecyclerView.Adapter<TodoListAdapter.TodoLi
     }
 
     public class TodoListAdapterViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+        final CheckBox cb;
+        final TextView dueDate;
+        final TextView priority;
+        final PriorityStarImageView star;
+        final ConstraintLayout container;
         public TodoListAdapterViewHolder(View itemView) {
             super(itemView);
+            cb = itemView.findViewById(R.id.todo_desc_cb);
+            dueDate = itemView.findViewById(R.id.due_date_tv);
+            priority = itemView.findViewById(R.id.todo_priority_tv);
+            star = itemView.findViewById(R.id.todo_priority_star);
+            container = itemView.findViewById(R.id.item_todo_list);
+            itemView.setOnClickListener(this);
+            cb.setOnClickListener(this);
         }
 
         @Override
         public void onClick(View v) {
-
+            cursor.moveToPosition(getAdapterPosition());
+            TodoTask todoTask = new TodoTask(cursor.getString(descIndex),
+                    cursor.getInt(priorityIndex), cursor.getLong(dueDateIndex),
+                    cursor.getInt(idIndex), cursor.getInt(completedIndex));
+            onClickHandler.onClick(todoTask, v);
         }
     }
 }
